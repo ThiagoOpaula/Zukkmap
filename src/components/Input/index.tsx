@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInputProps } from 'react-native';
 
 import { Container, TextInput } from './styles';
@@ -7,12 +7,12 @@ interface InputProps extends TextInputProps {
   placeholder: string;
 }
 
-const Input: React.FC<InputProps> = ({ placeholder, value }: InputProps) => {
-  console.log(value);
+const Input: React.FC<InputProps> = ({ placeholder }: InputProps) => {
+  const [userName, setUserName] = useState('');
 
   return (
     <Container>
-      <TextInput placeholder={placeholder} />
+      <TextInput placeholder={placeholder} value={userName} />
     </Container>
   );
 };
