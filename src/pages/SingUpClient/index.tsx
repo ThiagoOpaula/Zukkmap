@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-
-import { v4 } from 'react-native-uuid';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 import Repository from '../../components/Repository';
 import getRealm from '../../services/realm';
@@ -22,6 +22,9 @@ import Button from '../../components/Button';
 
 const SignUpClient: React.FC = () => {
   const navigation = useNavigation();
+  const [namevalue, setNameValue] = useState('');
+  const [latitudevalue, setLatitudeValue] = useState(0);
+  const [longitudevalue, setLongitudeValue] = useState(0);
   const [input, setInput] = useState('');
 
   async function saveRepository(repository: any) {
@@ -40,32 +43,33 @@ const SignUpClient: React.FC = () => {
   }
 
   async function handleAddRepository() {
+    const newid = uuidv4();
+
     const data = {
-      id: 105,
-      name: 'teste',
-      longitude: 10,
-      latitude: 10,
+      id: newid,
+      name: namevalue,
+      longitude: latitudevalue,
+      latitude: longitudevalue,
     };
 
     await saveRepository(data);
-
-    setInput('');
   }
 
-  function handleGetLocation(username, coordinates) {
-    console.log(username, coordinates);
+  function handleMapSetLocation(latitude: number, longitude: number) {
+    setLatitudeValue(latitude);
+    setLongitudeValue(longitude);
+  }
+
+  function handleUserChange(name: string) {
+    setNameValue(name);
   }
 
   return (
     <>
       <Form>
         <Container>
-          <Input
-            value={input}
-            onChangeText={text => setInput(text)}
-            placeholder="name"
-          />
-          <Map handleLocation={handleGetLocation} />
+          <Input placeholder="name" handleUserChange={handleUserChange} />
+          <Map handleMapSetLocation={handleMapSetLocation} />
 
           <Submit onPress={handleAddRepository}>
             <Button Text="Salvar" onPress={handleAddRepository} />

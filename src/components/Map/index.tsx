@@ -6,7 +6,11 @@ import Geolocation from 'react-native-geolocation-service';
 
 import { Container, Maps } from './styles';
 
-const Map: React.FC = ({ handleLocation }) => {
+interface MapProps {
+  handleMapSetLocation: (latitude: number, longitude: number) => void;
+}
+
+const Map: React.FC<MapProps> = ({ handleMapSetLocation }: MapProps) => {
   const [loading, setLoading] = useState(false);
 
   const [coordinates, setCoordinates] = useState({
@@ -14,19 +18,18 @@ const Map: React.FC = ({ handleLocation }) => {
     longitude: -45.901178,
   });
 
-  handleLocation(coordinates);
-
-  // useEffect(() => {
-  //   Geolocation.getCurrentPosition(
-  //     ({ coords }) => {
-  //       setCoordinates(coords);
-  //       setLoading(false);
-  //     },
-  //     error => {
-  //       console.log(error.code, error.message);
-  //     },
-  //   );
-  // }, []);
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setCoordinates(coords);
+        setLoading(false);
+        handleMapSetLocation(coordinates.latitude, coordinates.longitude);
+      },
+      error => {
+        console.log(error.code, error.message);
+      },
+    );
+  }, []);
 
   return (
     <Container>

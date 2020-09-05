@@ -3,10 +3,10 @@ export default class RepositorySchema {
     name: 'Repository',
     primaryKey: 'id',
     properties: {
-      id: { type: 'int' },
+      id: { type: 'string' },
       name: { type: 'string', indexed: true },
-      longitude: 'int',
-      latitude: 'int',
+      longitude: 'float',
+      latitude: 'float',
     },
   };
 }
