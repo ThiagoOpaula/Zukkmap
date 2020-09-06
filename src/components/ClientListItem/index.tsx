@@ -9,7 +9,7 @@ interface Info {
   data: Client;
 }
 
-const Repository: React.FC<Info> = ({ data }: Info) => {
+const ClientListItem: React.FC<Info> = ({ data }: Info) => {
   const navigation = useNavigation();
 
   function edit() {
@@ -27,4 +27,4 @@ const Repository: React.FC<Info> = ({ data }: Info) => {
   );
 };
 
-export default Repository;
+export default ClientListItem;

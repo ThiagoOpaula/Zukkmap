@@ -24,6 +24,15 @@ const Map: React.FC<MapProps> = ({
     longitude: -48.901178,
   });
 
+  // useEffect(() => {
+  //   const updatedCoordinates = {
+  //     latitude: longitudeValue,
+  //     longitude: latitudeValue,
+  //   };
+
+  //   setCoordinates(updatedCoordinates);
+  // }, [longitudeValue]);
+
   useEffect(() => {
     Geolocation.getCurrentPosition(
       ({ coords }) => {
@@ -36,15 +45,6 @@ const Map: React.FC<MapProps> = ({
       },
     );
   }, []);
-
-  useEffect(() => {
-    const updatedCoordinates = {
-      latitude: longitudeValue,
-      longitude: latitudeValue,
-    };
-
-    setCoordinates(updatedCoordinates);
-  }, [longitudeValue]);
 
   return (
     <Container>

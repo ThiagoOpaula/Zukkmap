@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-import Repository from '../../components/Repository';
+import ClientListItem from '../../components/ClientListItem';
 
 import Input from '../../components/Input';
 
-import getRealm from '../../services/realm';
-
 import Client from '../../models/Client';
+
+import ClientRepository from '../../repositories/clientRepository';
 
 import {
   Container,
@@ -19,43 +19,49 @@ import {
 
 const ClientList: React.FC = () => {
   const navigation = useNavigation();
-  const [namevalue, setNameValue] = useState('');
-  const [repositories, setRepositories] = useState([]);
+  const [nameValue, setNameValue] = useState('');
+  const [clientList, setClientList] = useState<Realm.Results<Client>>();
 
-  function handleUserChange(name: string) {
+  const clientRepository = new ClientRepository();
+
+  const handleFilterInput = async (name: string) => {
     setNameValue(name);
-  }
+  };
+
+  const loadClients = async () => {
+    const data = await clientRepository.GetAll(nameValue);
+    setClientList(data);
+  };
 
   useEffect(() => {
-    async function loadRepositories() {
-      const realm = await getRealm();
+    loadClients();
+  }, [nameValue]);
 
-      const data = realm.objects('Repository');
-
-      setRepositories(data);
-    }
-
-    loadRepositories();
-  }, [namevalue]);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadClients();
+    }, []),
+  );
 
   return (
     <>
       <Container>
         <Input
-          nameValue=""
           placeholder="Procurar usuário"
-          handleUserChange={handleUserChange}
+          handleFilterInput={handleFilterInput}
         />
       </Container>
 
       <List
         keyboardShouldPersistTaps="handled"
-        data={repositories}
-        renderItem={({ item }) => <Repository data={item} />}
+        data={clientList}
+        renderItem={({ item }) => <ClientListItem data={item as Client} />}
       />
 
       <ChangePageContainer
-        onPress={() => navigation.navigate('SignUpClient', new Client())}
+        onPress={() => {
+          navigation.navigate('SignUpClient', { userData: new Client() });
+        }}
       >
         <ChangePageButton>Cadastrar cliente</ChangePageButton>
       </ChangePageContainer>

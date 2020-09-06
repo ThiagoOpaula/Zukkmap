@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-
-import { useCardAnimation } from '@react-navigation/stack';
+import Client from '../../models/Client';
+import ClientRepository from '../../repositories/clientRepository';
 import getRealm from '../../services/realm';
 
 import {
@@ -30,16 +30,11 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
   const [nameValue, setNameValue] = useState('');
   const [latitudeValue, setLatitudeValue] = useState(0);
   const [longitudeValue, setLongitudeValue] = useState(0);
+  const clientRepository = new ClientRepository();
+  const { userData } = route.params;
 
   useEffect(() => {
-    const { userData } = route.params;
     if (userData) {
-      // console.log(
-      //   userData.id,
-      //   userData.name,
-      //   userData.latitude,
-      //   userData.longitude,
-      // );
       setIdValue(userData.id);
       setNameValue(userData.name);
       setLatitudeValue(userData.latitude);
@@ -47,40 +42,40 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
     }
   }, [route]);
 
-  async function saveRepository(repository: any) {
-    const data = {
-      id: repository.id,
-      name: repository.name,
-      longitude: repository.longitude,
-      latitude: repository.latitude,
-    };
+  async function handleAddClient() {
+    const client = new Client();
+    client.id = uuidv4();
+    client.name = nameValue;
+    client.longitude = latitudeValue;
+    client.latitude = longitudeValue;
 
-    const realm = await getRealm();
-
-    realm.write(() => {
-      realm.create('Repository', data, 'modified');
-    });
-
-    return data;
+    await clientRepository.SaveClient(client);
   }
 
-  async function handleAddRepository() {
-    const newid = uuidv4();
+  async function handleUpdateClient() {
+    const client = new Client();
+    client.id = userData.id;
+    client.name = nameValue;
+    client.longitude = latitudeValue;
+    client.latitude = longitudeValue;
 
-    const data = {
-      id: newid,
-      name: nameValue,
-      longitude: latitudeValue,
-      latitude: longitudeValue,
-    };
-
-    await saveRepository(data);
+    await clientRepository.SaveClient(client, true);
   }
 
-  async function handleUpdateRepository(repository: any) {
-    if (!repository.id) {
-      handleAddRepository();
+  async function handleSave() {
+    if (!userData.id) {
+      await handleAddClient();
     } else {
+      await handleUpdateClient();
+    }
+    navigations.navigate('ClientList');
+  }
+
+  async function handleDelete() {
+    if (userData.id) {
+      await clientRepository.DeleteClient(userData.id);
+
+      navigations.navigate('ClientList');
     }
   }
 
@@ -89,7 +84,7 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
     setLongitudeValue(longitude);
   }
 
-  function handleUserChange(name: string) {
+  function handleUserInput(name: string) {
     setNameValue(name);
   }
 
@@ -99,7 +94,7 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
         <Container>
           <Input
             placeholder="name"
-            handleUserChange={handleUserChange}
+            handleFilterInput={handleUserInput}
             nameValue={nameValue}
           />
           <Map
@@ -108,9 +103,9 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
             longitudeValue={longitudeValue}
           />
 
-          <Submit onPress={handleAddRepository}>
-            <Button Text="Salvar" onPress={handleAddRepository} />
-            <Button Text="Excluir" />
+          <Submit>
+            <Button Text="Salvar" onPress={handleSave} />
+            <Button Text="Excluir" onPress={handleDelete} />
           </Submit>
         </Container>
       </Form>

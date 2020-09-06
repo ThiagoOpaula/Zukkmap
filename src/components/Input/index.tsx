@@ -6,17 +6,17 @@ import { Container, TextInput } from './styles';
 interface InputProps extends TextInputProps {
   placeholder: string;
   nameValue: string;
-  handleUserChange: (text: string) => void;
+  handleFilterInput: (text: string) => void;
 }
 
 const Input: React.FC<InputProps> = ({
   placeholder,
   nameValue,
-  handleUserChange,
+  handleFilterInput,
 }: InputProps) => {
-  function handleChangeText(text: string) {
-    handleUserChange(text);
-  }
+  const handleChangeText = (text: string) => {
+    handleFilterInput(text);
+  };
 
   return (
     <Container>
