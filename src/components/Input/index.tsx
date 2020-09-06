@@ -5,11 +5,13 @@ import { Container, TextInput } from './styles';
 
 interface InputProps extends TextInputProps {
   placeholder: string;
+  nameValue: string;
   handleUserChange: (text: string) => void;
 }
 
 const Input: React.FC<InputProps> = ({
   placeholder,
+  nameValue,
   handleUserChange,
 }: InputProps) => {
   function handleChangeText(text: string) {
@@ -18,7 +20,11 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <Container>
-      <TextInput placeholder={placeholder} onChangeText={handleChangeText} />
+      <TextInput
+        placeholder={placeholder}
+        onChangeText={handleChangeText}
+        value={nameValue}
+      />
     </Container>
   );
 };

@@ -8,14 +8,20 @@ import { Container, Maps } from './styles';
 
 interface MapProps {
   handleMapSetLocation: (latitude: number, longitude: number) => void;
+  longitudeValue: number;
+  latitudeValue: number;
 }
 
-const Map: React.FC<MapProps> = ({ handleMapSetLocation }: MapProps) => {
-  const [loading, setLoading] = useState(false);
+const Map: React.FC<MapProps> = ({
+  handleMapSetLocation,
+  longitudeValue,
+  latitudeValue,
+}: MapProps) => {
+  const [loading, setLoading] = useState(true);
 
   const [coordinates, setCoordinates] = useState({
-    latitude: -23.226179,
-    longitude: -45.901178,
+    latitude: -25.226179,
+    longitude: -48.901178,
   });
 
   useEffect(() => {
@@ -30,6 +36,15 @@ const Map: React.FC<MapProps> = ({ handleMapSetLocation }: MapProps) => {
       },
     );
   }, []);
+
+  useEffect(() => {
+    const updatedCoordinates = {
+      latitude: longitudeValue,
+      longitude: latitudeValue,
+    };
+
+    setCoordinates(updatedCoordinates);
+  }, [longitudeValue]);
 
   return (
     <Container>

@@ -13,8 +13,8 @@ const AuthRoutes: React.FC = () => (
       cardStyle: { backgroundColor: '#FFFFFF' },
     }}
   >
-    <Auth.Screen name="SignUpClient" component={SignUpClient} />
     <Auth.Screen name="ClientList" component={ClientList} />
+    <Auth.Screen name="SignUpClient" component={SignUpClient} />
   </Auth.Navigator>
 );
 

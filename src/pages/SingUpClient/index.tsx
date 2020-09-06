@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-import Repository from '../../components/Repository';
+import { useCardAnimation } from '@react-navigation/stack';
 import getRealm from '../../services/realm';
 
 import {
@@ -20,12 +20,32 @@ import Input from '../../components/Input';
 
 import Button from '../../components/Button';
 
-const SignUpClient: React.FC = () => {
-  const navigation = useNavigation();
-  const [namevalue, setNameValue] = useState('');
-  const [latitudevalue, setLatitudeValue] = useState(0);
-  const [longitudevalue, setLongitudeValue] = useState(0);
-  const [input, setInput] = useState('');
+interface Info {
+  route: any;
+}
+
+const SignUpClient: React.FC<Info> = ({ route }: Info) => {
+  const navigations = useNavigation();
+  const [idValue, setIdValue] = useState('');
+  const [nameValue, setNameValue] = useState('');
+  const [latitudeValue, setLatitudeValue] = useState(0);
+  const [longitudeValue, setLongitudeValue] = useState(0);
+
+  useEffect(() => {
+    const { userData } = route.params;
+    if (userData) {
+      // console.log(
+      //   userData.id,
+      //   userData.name,
+      //   userData.latitude,
+      //   userData.longitude,
+      // );
+      setIdValue(userData.id);
+      setNameValue(userData.name);
+      setLatitudeValue(userData.latitude);
+      setLongitudeValue(userData.longitude);
+    }
+  }, [route]);
 
   async function saveRepository(repository: any) {
     const data = {
@@ -38,8 +58,10 @@ const SignUpClient: React.FC = () => {
     const realm = await getRealm();
 
     realm.write(() => {
-      realm.create('Repository', data);
+      realm.create('Repository', data, 'modified');
     });
+
+    return data;
   }
 
   async function handleAddRepository() {
@@ -47,12 +69,19 @@ const SignUpClient: React.FC = () => {
 
     const data = {
       id: newid,
-      name: namevalue,
-      longitude: latitudevalue,
-      latitude: longitudevalue,
+      name: nameValue,
+      longitude: latitudeValue,
+      latitude: longitudeValue,
     };
 
     await saveRepository(data);
+  }
+
+  async function handleUpdateRepository(repository: any) {
+    if (!repository.id) {
+      handleAddRepository();
+    } else {
+    }
   }
 
   function handleMapSetLocation(latitude: number, longitude: number) {
@@ -68,8 +97,16 @@ const SignUpClient: React.FC = () => {
     <>
       <Form>
         <Container>
-          <Input placeholder="name" handleUserChange={handleUserChange} />
-          <Map handleMapSetLocation={handleMapSetLocation} />
+          <Input
+            placeholder="name"
+            handleUserChange={handleUserChange}
+            nameValue={nameValue}
+          />
+          <Map
+            handleMapSetLocation={handleMapSetLocation}
+            latitudeValue={latitudeValue}
+            longitudeValue={longitudeValue}
+          />
 
           <Submit onPress={handleAddRepository}>
             <Button Text="Salvar" onPress={handleAddRepository} />
@@ -78,7 +115,7 @@ const SignUpClient: React.FC = () => {
         </Container>
       </Form>
 
-      <ChangePageContainer onPress={() => navigation.navigate('ClientList')}>
+      <ChangePageContainer onPress={() => navigations.navigate('ClientList')}>
         <ChangePageButton>Lista de clientes</ChangePageButton>
       </ChangePageContainer>
     </>
