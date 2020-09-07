@@ -29,7 +29,7 @@ $ yarn android
 para rodar no emulador ou dispositivo fisico android
 
 
-## não se esqueça de ativar o GPS
+# não se esqueça de dar a permissão para o gps
 
-## insira sua key da google em android/app/src/main/AndroidManifets.xml
+# insira sua key da google em android/app/src/main/AndroidManifets.xml
 
