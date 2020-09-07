@@ -32,8 +32,7 @@ export const Submit = styled.View`
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  position: absolute;
-  padding-top: 460px;
+  padding-top: 620px;
 `;
 
 export const Form = styled.View`

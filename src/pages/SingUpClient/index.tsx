@@ -104,11 +104,11 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
             latitudeValue={testelat}
             longitudeValue={testelon}
           />
-          <Submit>
-            <Button Text="Salvar" onPress={handleSave} />
-            <Button Text="Excluir" onPress={handleDelete} />
-          </Submit>
         </Container>
+        <Submit>
+          <Button Text="Salvar" onPress={handleSave} />
+          <Button Text="Excluir" onPress={handleDelete} />
+        </Submit>
       </Form>
 
       <ChangePageContainer onPress={() => navigations.navigate('ClientList')}>
