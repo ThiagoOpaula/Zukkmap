@@ -3,9 +3,9 @@ export default class Client {
 
   name: string;
 
-  longitude: number;
+  longitude: number | undefined;
 
-  latitude: number;
+  latitude: number | undefined;
 
   constructor() {
     this.id = '';

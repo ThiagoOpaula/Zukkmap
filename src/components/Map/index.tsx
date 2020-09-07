@@ -17,30 +17,33 @@ const Map: React.FC<MapProps> = ({
   latitudeValue,
   handleMapSetLocation,
 }: MapProps) => {
-  // const [loading, setLoading] = useState(false);
-  const [mapLatitude, setMapLatitude] = useState<number>(10);
-  const [mapLongitude, setMapLongitude] = useState<number>(20);
+  const [loading, setLoading] = useState(true);
+  const [mapLatitude, setMapLatitude] = useState(longitudeValue);
+  const [mapLongitude, setMapLongitude] = useState(latitudeValue);
 
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       ({ coords }) => {
         setMapLongitude(coords.longitude);
         setMapLatitude(coords.latitude);
-        console.log(longitudeValue, latitudeValue);
+        console.log(coords);
       },
       error => {
         console.log(error.code, error.message);
       },
     );
-    handleMapSetLocation(mapLatitude, mapLongitude);
   };
 
   useEffect(() => {
-    if (longitudeValue && latitudeValue) {
+    // local do bug
+    if (longitudeValue !== 0) {
       setMapLatitude(latitudeValue);
       setMapLongitude(longitudeValue);
+      setLoading(false);
     } else {
       getCurrentLocation();
+      handleMapSetLocation(mapLatitude, mapLongitude);
+      setLoading(false);
     }
   }, []);
 
@@ -53,14 +56,18 @@ const Map: React.FC<MapProps> = ({
 
   return (
     <Container>
-      <Maps
-        initialRegion={{
-          latitude: mapLatitude,
-          longitude: mapLongitude,
-          latitudeDelta: 0.008,
-          longitudeDelta: 0.008,
-        }}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#e8e" />
+      ) : (
+        <Maps
+          initialRegion={{
+            latitude: mapLatitude,
+            longitude: mapLongitude,
+            latitudeDelta: 0.008,
+            longitudeDelta: 0.008,
+          }}
+        />
+      )}
     </Container>
   );
 };

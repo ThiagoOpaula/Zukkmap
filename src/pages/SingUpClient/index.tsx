@@ -35,6 +35,7 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
 
   useEffect(() => {
     if (userData) {
+      console.log(userData.latitude, userData.longitude, 'singup');
       setNameValue(userData.name);
       setLatitudeValue(userData.latitude);
       setLongitudeValue(userData.longitude);
@@ -87,8 +88,6 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
     setNameValue(name);
   };
   // <Map latitudeValue={latitudeValue} longitudeValue={longitudeValue} />
-  const testelat = -23.229578;
-  const testelon = -45.904054;
   return (
     <>
       <Form>
@@ -101,8 +100,8 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
 
           <Map
             handleMapSetLocation={handleMapSetLocation}
-            latitudeValue={testelat}
-            longitudeValue={testelon}
+            latitudeValue={latitudeValue}
+            longitudeValue={longitudeValue}
           />
         </Container>
         <Submit>
