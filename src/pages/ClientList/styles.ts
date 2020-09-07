@@ -12,7 +12,7 @@ export const ChangePageContainer = styled.TouchableOpacity`
   bottom: 0;
   right: 0;
   border-top-width: 1px;
-  border-color: #1231fc;
+  border-color: #0ca6e8;
   background: #ffffff;
   padding: 16px 0;
   justify-content: center;
@@ -21,7 +21,7 @@ export const ChangePageContainer = styled.TouchableOpacity`
 `;
 
 export const ChangePageButton = styled.Text`
-  color: #1231fc;
+  color: #0ca6e8;
   font-size: 24px;
   margin-left: 16px;
 `;
@@ -30,6 +30,9 @@ export const List = styled.FlatList.attrs({
   contentContainerStyle: { paddingHorizontal: 20 },
   ShowVerticalScrollIndicator: false,
 })`
-  margin-top: 20px;
-  margin-bottom: 100px;
+  margin-top: -20px;
+  margin-bottom: 120px;
+  padding-bottom: 50px;
+  padding-left: 20px;
+  padding-right: -30px;
 `;

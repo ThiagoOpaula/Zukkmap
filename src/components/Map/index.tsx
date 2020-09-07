@@ -13,53 +13,54 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({
-  handleMapSetLocation,
   longitudeValue,
   latitudeValue,
+  handleMapSetLocation,
 }: MapProps) => {
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(false);
+  const [mapLatitude, setMapLatitude] = useState<number>(10);
+  const [mapLongitude, setMapLongitude] = useState<number>(20);
 
-  const [coordinates, setCoordinates] = useState({
-    latitude: -25.226179,
-    longitude: -48.901178,
-  });
-
-  // useEffect(() => {
-  //   const updatedCoordinates = {
-  //     latitude: longitudeValue,
-  //     longitude: latitudeValue,
-  //   };
-
-  //   setCoordinates(updatedCoordinates);
-  // }, [longitudeValue]);
-
-  useEffect(() => {
+  const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       ({ coords }) => {
-        setCoordinates(coords);
-        setLoading(false);
-        handleMapSetLocation(coordinates.latitude, coordinates.longitude);
+        setMapLongitude(coords.longitude);
+        setMapLatitude(coords.latitude);
+        console.log(longitudeValue, latitudeValue);
       },
       error => {
         console.log(error.code, error.message);
       },
     );
+    handleMapSetLocation(mapLatitude, mapLongitude);
+  };
+
+  useEffect(() => {
+    if (longitudeValue && latitudeValue) {
+      setMapLatitude(latitudeValue);
+      setMapLongitude(longitudeValue);
+    } else {
+      getCurrentLocation();
+    }
   }, []);
+
+  // const mapConfig = {
+  //   latitude: mapLatitude,
+  //   longitude: mapLongitude,
+  //   latitudeDelta: 0.008,
+  //   longitudeDelta: 0.008,
+  // };
 
   return (
     <Container>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <Maps
-          initialRegion={{
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude,
-            latitudeDelta: 0.007,
-            longitudeDelta: 0.007,
-          }}
-        />
-      )}
+      <Maps
+        initialRegion={{
+          latitude: mapLatitude,
+          longitude: mapLongitude,
+          latitudeDelta: 0.008,
+          longitudeDelta: 0.008,
+        }}
+      />
     </Container>
   );
 };

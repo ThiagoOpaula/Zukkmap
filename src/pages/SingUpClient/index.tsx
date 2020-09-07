@@ -4,7 +4,6 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import Client from '../../models/Client';
 import ClientRepository from '../../repositories/clientRepository';
-import getRealm from '../../services/realm';
 
 import {
   Container,
@@ -16,6 +15,8 @@ import {
 
 import Map from '../../components/Map';
 
+// import Map2 from '../../components/Map2';
+
 import Input from '../../components/Input';
 
 import Button from '../../components/Button';
@@ -26,21 +27,19 @@ interface Info {
 
 const SignUpClient: React.FC<Info> = ({ route }: Info) => {
   const navigations = useNavigation();
-  const [idValue, setIdValue] = useState('');
-  const [nameValue, setNameValue] = useState('');
-  const [latitudeValue, setLatitudeValue] = useState(0);
-  const [longitudeValue, setLongitudeValue] = useState(0);
-  const clientRepository = new ClientRepository();
   const { userData } = route.params;
+  const [nameValue, setNameValue] = useState<string>(userData.name);
+  const [latitudeValue, setLatitudeValue] = useState(userData.latitude);
+  const [longitudeValue, setLongitudeValue] = useState(userData.longitude);
+  const clientRepository = new ClientRepository();
 
   useEffect(() => {
     if (userData) {
-      setIdValue(userData.id);
       setNameValue(userData.name);
       setLatitudeValue(userData.latitude);
       setLongitudeValue(userData.longitude);
     }
-  }, [route]);
+  }, [userData]);
 
   async function handleAddClient() {
     const client = new Client();
@@ -79,15 +78,17 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
     }
   }
 
-  function handleMapSetLocation(latitude: number, longitude: number) {
+  const handleMapSetLocation = (latitude: number, longitude: number) => {
     setLatitudeValue(latitude);
     setLongitudeValue(longitude);
-  }
+  };
 
-  function handleUserInput(name: string) {
+  const handleUserInput = (name: string) => {
     setNameValue(name);
-  }
-
+  };
+  // <Map latitudeValue={latitudeValue} longitudeValue={longitudeValue} />
+  const testelat = -23.229578;
+  const testelon = -45.904054;
   return (
     <>
       <Form>
@@ -97,12 +98,12 @@ const SignUpClient: React.FC<Info> = ({ route }: Info) => {
             handleFilterInput={handleUserInput}
             nameValue={nameValue}
           />
+
           <Map
             handleMapSetLocation={handleMapSetLocation}
-            latitudeValue={latitudeValue}
-            longitudeValue={longitudeValue}
+            latitudeValue={testelat}
+            longitudeValue={testelon}
           />
-
           <Submit>
             <Button Text="Salvar" onPress={handleSave} />
             <Button Text="Excluir" onPress={handleDelete} />

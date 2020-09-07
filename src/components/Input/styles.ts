@@ -8,13 +8,13 @@ export const Container = styled.View`
   margin-bottom: 10%;
   flex-direction: row;
   align-items: center;
-  border-color: #ccc;
+  border-color: #0ca6e8;
   border-width: 2px;
-  background-color: #ffffff;
+  background-color: #ebebeb;
 `;
 
 export const TextInput = styled.TextInput`
   flex: 1;
-  color: #333333;
+  color: #0ca6e8;
   font-size: 16px;
 `;
